@@ -12,6 +12,8 @@ namespace SweetStore.Data.Configuration
             builder.HasKey(o => o.Id);
             builder.HasIndex(x => new { x.Id });
 
+            builder.Property(x => x.Status)
+                .HasConversion<string>();
 
             builder.HasMany(x => x.Items)
                    .WithOne(x => x.Order)

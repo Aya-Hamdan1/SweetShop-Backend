@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SweetStore.Data;
+using SweetStore.Model;
 using SweetStore.Model.Order;
 using SweetStore.Model.Products;
 using SweetStore.ViewModels;
 using SweetStore.ViewModels.Order;
+using System.Security.Claims;
 
 namespace SweetStore.Services
 {
@@ -16,19 +18,18 @@ namespace SweetStore.Services
             _context = context;
         }
 
-        public async Task<Guid> CreateOrderAsync(CreateOrderDto dto)
+        public async Task<Guid> CreateOrderAsync(CreateOrderDto dto, Guid userId)
         {
             var order = new Order
             {
-                Id = new Guid(),
-                CustomerName = dto.CustomerName,
-                CustomerEmail = dto.CustomerEmail,
+                Id = Guid.NewGuid(),
+                UserId = userId,
                 CustomerPhone = dto.CustomerPhone,
                 Address = dto.Address,
                 Items = new List<OrderItem>(),
                 CreatedAt = DateTime.UtcNow,
                 TotalPrice = 0,
-                Status = "pending"
+                Status = OrderStatus.Pending
             };
             decimal totalPrice = 0;
             foreach (var item in dto.Items)
@@ -59,7 +60,7 @@ namespace SweetStore.Services
         }
 
         public async Task<PagedResponseDto<OrderResponseDto>> GetOrders(
-        string? customerName,
+        Guid? userId,
         DateTime? startDate,
         DateTime? endDate,
         int page = 1,
@@ -68,9 +69,9 @@ namespace SweetStore.Services
             var query = _context.Orders.AsQueryable();
 
             // 🔍 Filter by customer
-            if (!string.IsNullOrEmpty(customerName))
+            if (userId != null)
             {
-                query = query.Where(o => o.CustomerName.Contains(customerName));
+                query = query.Where(o => o.UserId == userId);
             }
 
             // 📅 Filter by date
@@ -93,7 +94,7 @@ namespace SweetStore.Services
                 .Select(o => new OrderResponseDto
                 {
                     Id = o.Id,
-                    CustomerName = o.CustomerName,
+                    CustomerName = o.User.Name,
                     TotalPrice = o.TotalPrice,
                     CreatedAt = o.CreatedAt,
                     Items = o.Items.Select(i => new OrderItemResponseDto
@@ -122,7 +123,7 @@ namespace SweetStore.Services
                 .Select(o => new OrderResponseDto
                 {
                     Id = o.Id,
-                    CustomerName = o.CustomerName,
+                    CustomerName = o.User.Name,
                     TotalPrice = o.TotalPrice,
                     CreatedAt = o.CreatedAt,
                     Items = o.Items.Select(i => new OrderItemResponseDto
@@ -141,6 +142,18 @@ namespace SweetStore.Services
             return order;
         }
 
+        public async Task<bool> UpdatOrderStatus(Guid orderId, OrderStatus status)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
 
+            if (order == null)
+                throw new Exception("Order not found");
+
+            order.Status = status;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SweetStore.Data;
 using SweetStore.Model.Products;
@@ -11,13 +12,13 @@ namespace SweetStore.Controllers
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly ProductService _productService;
+        private readonly IProductService _productService;
 
-        public ProductController(ProductService productService)
+        public ProductController(IProductService productService)
         {
            _productService = productService;
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateProduct(CreateProductDto dto)
         {
@@ -38,6 +39,7 @@ namespace SweetStore.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{ProductId}")]
         public async Task<IActionResult> UpdateProduct(Guid ProductId, [FromForm] UpdateProductDto dto)
         {
@@ -45,7 +47,7 @@ namespace SweetStore.Controllers
            return Ok(new { Success = true, Message = "Product updated successfully" });
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {

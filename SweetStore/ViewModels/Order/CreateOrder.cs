@@ -6,14 +6,6 @@ namespace SweetStore.ViewModels.Order
     public class CreateOrderDto
     {
         [Required]
-        [MinLength(3)]
-        public string CustomerName { get; set; }
-
-        [Required]
-        [EmailAddress]
-        public string CustomerEmail { get; set; }
-
-        [Required]
         [Phone]
         public string CustomerPhone { get; set; }
         public string Address { get; set; }
