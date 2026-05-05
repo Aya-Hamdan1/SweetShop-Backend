@@ -3,23 +3,33 @@ Backend API for a dessert shop system built with ASP.NET Core. Supports product 
 
 
 ## 🚀 Features
-
-* Product management (Create, Update, Delete, Get)
+* Product management (CRUD)
 * Category management
-* Order system with multiple products per order
+* Order system with multiple items
 * Order total price calculation
-* Dashboard (basic statistics like total orders and total sales) 
-* Clean structure using Controllers and Services
-* Input validation and DTOs
+* User authentication (JWT)
+* Role-based authorization (Admin/User)
+* Pagination and filtering
+* Dashboard with statistics (orders, revenue)
+* Image upload support
+* Clean architecture using Controllers & Services
+* DTOs and input validation
+* Global exception handling (middleware)
 
 ## 🛠️ Technologies
 
 * ASP.NET Core Web API
 * Entity Framework Core
 * SQL Server
-
+* JWT Authentication
+* Swagger (OpenAPI)
+  
 ## 📦 API Endpoints (Examples)
 
+### Account
+* POST /api/Account/register
+* POST /api/Account/login
+* PUT /api/Account/users/{id}/role (Admin only)
 ### Products
 
 * GET /api/Product
@@ -30,8 +40,10 @@ Backend API for a dessert shop system built with ASP.NET Core. Supports product 
 ### Orders
 
 * POST /api/Order
-* GET /api/Order
+* GET /api/Order (Admin only)
+* GET /api/Order/MyOrders
 * GET /api/Order/{id}
+* PUT /api/Order/{id}/status (Admin only)
 
 ### Category
 
@@ -42,11 +54,16 @@ Backend API for a dessert shop system built with ASP.NET Core. Supports product 
 
 * GET /api/Dashboard
 
+## 🔐 Authentication & Authorization
 
-## 🧠 Notes
-
-* Authentication is not implemented in this version.
-* This project focuses on backend logic and API design.
+* JWT-based authentication
+* Role-based authorization (Admin / User)
+* Protected endpoints using [Authorize]
+  
+## 🏗️ Architecture
+* Layered architecture (Controllers, Services, Data)
+* Separation of concerns
+* Dependency Injection
 
 ## ▶️ How to Run
 
@@ -55,7 +72,11 @@ Backend API for a dessert shop system built with ASP.NET Core. Supports product 
 3. Run migrations
 4. Start the project
 
----
+## 🧠 Notes
+
+* Authentication and Authorization implemented using JWT
+* Role-based access control (Admin/User)
+* Focused on scalable backend design and clean architecture
 
 ✨ This project was built as part of backend practice and portfolio development.
 
