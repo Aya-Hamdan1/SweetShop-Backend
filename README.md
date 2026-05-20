@@ -72,8 +72,6 @@ Backend API for a dessert shop system built with ASP.NET Core. Supports product 
 3. Run migrations
 4. Start the project
 
-## 📽️ Demo
-https://1drv.ms/v/c/936f000db76387dd/IQCW-kGkq6eLSKzZwHRddmBAAf_X_TgJNdwpvqpsiHRVxlg?e=9GRmVd
 
 ## 🧠 Notes
 
