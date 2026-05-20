@@ -29,7 +29,7 @@ namespace SweetStore.Controllers
             return Ok(new { Success = true, Message = "Order Created Successfully", Data = order });
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetOrders(
             Guid? userId,

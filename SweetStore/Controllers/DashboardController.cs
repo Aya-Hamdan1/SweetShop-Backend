@@ -22,7 +22,7 @@ namespace SweetStore.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDashboard()
         {
-            var result = _services.GetDashboard();
+            var result = await _services.GetDashboard();
 
             return Ok(result);
         }

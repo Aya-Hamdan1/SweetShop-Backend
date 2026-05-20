@@ -71,6 +71,7 @@ builder.Services.AddScoped<IProductService,ProductService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<DashboardServices>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -79,8 +80,18 @@ builder.Services.AddControllers()
             new System.Text.Json.Serialization.JsonStringEnumConverter()
         );
     });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 var app = builder.Build();
+
 app.UseMiddleware<SweetStore.Middleware.ExceptionMiddleware>();
 // Swagger
 if (app.Environment.IsDevelopment())
@@ -92,6 +103,7 @@ if (app.Environment.IsDevelopment())
 // Middlewares
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
